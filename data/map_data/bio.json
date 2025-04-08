@@ -1,0 +1,148 @@
+{
+    "features": [
+        {
+            "fid": "1358",
+            "title": "USAID/GeoCenter",
+            "startDate": "2020",
+            "endDate": "Present",
+            "category": "professional",
+            "details": "Senior GIS Analyst and YouthMappers Activity Manager at the USAID/GeoCenter."
+        },
+        {
+            "fid": "1358",
+            "title": "Creative Associates International",
+            "startDate": "2018",
+            "endDate": "2020",
+            "category": "professional",
+            "details": "Manager, Geospatial and Data Services at Creative Associates."
+        },
+        {
+            "fid": "1358",
+            "title": "USAID/Office of Transition Initiatives",
+            "startDate": "2015",
+            "endDate": "2018",
+            "category": "professional",
+            "details": "Geographic Information Officer at USAID/OTI."
+        },
+        {
+            "fid": "6767",
+            "title": "Apple Maps",
+            "startDate": "2013",
+            "endDate": "2014",
+            "category": "professional",
+            "details": "GIS Technician working on Apple Maps' data pipeline."
+        },
+        {
+            "fid": "1546",
+            "title": "Urban Ecology Institute",
+            "startDate": "2013",
+            "endDate": "2013",
+            "category": "professional",
+            "details": "GIS Intern working on designing Boston's first ever Street Tree Census."
+        },
+        {
+            "fid": "2851",
+            "title": "University of Twente (ITC)",
+            "startDate": "2011",
+            "endDate": "2013",
+            "category": "professional",
+            "details": "M.Sc. in Geoinforamtion Science and Earth Observation."
+        },
+        {
+            "fid": "3969",
+            "title": "iMMAP",
+            "startDate": "2010",
+            "endDate": "2011",
+            "category": "professional",
+            "details": "Supported the Iraq Government on its humanitarian demining efforts."
+        },
+        {
+            "fid": "1358",
+            "title": "Accenture",
+            "startDate": "2008",
+            "endDate": "2010",
+            "category": "professional",
+            "details": "Supported the Department of State's Acquisitions Bureau."
+        },
+        {
+            "fid": "1358",
+            "title": "George Washington University",
+            "startDate": "2004",
+            "endDate": "2008",
+            "category": "professional",
+            "details": "Studie International Relations with a concentration in Conflict and Security."
+        },
+        {
+            "fid": "2664",
+            "title": "Madrid, Spain",
+            "startDate": "2002",
+            "endDate": "2004",
+            "category": "personal",
+            "details": "I graduated high school in Madrid, fell in love with Real Madrid, jamon iberico and botellons."
+        },
+        {
+            "fid": "3191",
+            "title": "Budapest Part II",
+            "startDate": "2000",
+            "endDate": "2002",
+            "category": "personal",
+            "details": "We returned to Budapest where I finished Middle School and started High School."
+        },
+        {
+            "fid": "5756",
+            "title": "Manila, Philippines",
+            "startDate": "1994",
+            "endDate": "1996",
+            "category": "personal",
+            "details": "I lived in Manila for two years while my father was posted as a diplomat. I made the little league all-star team both years and was third in the league for doubles."
+        },
+        {
+            "fid": "3191",
+            "title": "Budapest, Hungary",
+            "startDate": "1991",
+            "endDate": "1994",
+            "category": "personal",
+            "details": "Next the family was in Budapest. I started kindergarten and learned to love Goulash and Hungarian café culture...I bet I could win any Esterházy eating contest."
+        },
+        {
+            "fid": "1358",
+            "title": "McLean, Virginia",
+            "startDate": "1996",
+            "endDate": "2000",
+            "category": "personal",
+            "details": "We returned to the U.S. were I got my first real dose of American culture. I loved playing football with the neighborhood kids, lisenting to my boombox, playing Age of Empires and Civ and watching South Park, the Simpsons and SNL."
+        },
+        {
+            "fid": "1358",
+            "title": "Arlington, Virginia",
+            "startDate": "1990",
+            "endDate": "1991",
+            "category": "personal",
+            "details": "I lived in Arlington, Virginia while my father studied hungarian at the Foreign Service Institute. I got to ride the metro and loved memorizing which side of the car the doors would open."
+        },
+        {
+            "fid": "1924",
+            "title": "Montevideo, Uruguay",
+            "startDate": "1986",
+            "endDate": "1990",
+            "category": "personal",
+            "details": "Spent the next three years in Montevideo, Uruguay where I enjoyed visiting the zoo, sword fighing with my friends and playing with the family dog Calaban."
+        },
+        {
+            "fid": "1519",
+            "title": "Born in Santiago, Chile",
+            "startDate": "1986",
+            "endDate": "1986",
+            "category": "personal",
+            "details": "Born on a rainy day in Santiago, Chile when my father was posted as Foreign Service Officer."
+        },
+        {
+            "fid": "1358",
+            "title": "George Washington University",
+            "startDate": "2004",
+            "endDate": "2008",
+            "category": "professional",
+            "details": "George Washington University, B.S. in International Relations."
+        }
+    ]
+} 

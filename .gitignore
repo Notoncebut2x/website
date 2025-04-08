@@ -1,0 +1,76 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Quarto files
+*.qmd
+*.qmd.json
+*.qmd.html
+*.qmd.pdf
+*.qmd.docx
+*.qmd.pptx
+*.qmd.epub
+*.qmd.tex
+*.qmd.odt
+*.qmd.rtf
+*.qmd.txt
+*.qmd.md
+*.qmd.tex
+*.qmd.aux
+*.qmd.log
+*.qmd.out
+*.qmd.toc
+*.qmd.lof
+*.qmd.lot
+*.qmd.fls
+*.qmd.fdb_latexmk
+*.qmd.synctex.gz
+*.qmd.vrb
+*.qmd.run.xml
+*.qmd.bbl
+*.qmd.blg
+*.qmd.bcf
+*.qmd.run.xml
+*.qmd.tex.latexmain
+*.qmd.tex.latexmain.fls
+*.qmd.tex.latexmain.log
+*.qmd.tex.latexmain.out
+*.qmd.tex.latexmain.synctex.gz
+*.qmd.tex.latexmain.vrb
+*.qmd.tex.latexmain.run.xml
+*.qmd.tex.latexmain.bbl
+*.qmd.tex.latexmain.blg
+*.qmd.tex.latexmain.bcf
+*.qmd.tex.latexmain.run.xml
+*.qmd.tex.latexmain.tex.latexmain
+*.qmd.tex.latexmain.tex.latexmain.fls
+*.qmd.tex.latexmain.tex.latexmain.log
+*.qmd.tex.latexmain.tex.latexmain.out
+*.qmd.tex.latexmain.tex.latexmain.synctex.gz
+*.qmd.tex.latexmain.tex.latexmain.vrb
+*.qmd.tex.latexmain.tex.latexmain.run.xml
+*.qmd.tex.latexmain.tex.latexmain.bbl
+*.qmd.tex.latexmain.tex.latexmain.blg
+*.qmd.tex.latexmain.tex.latexmain.bcf
+*.qmd.tex.latexmain.tex.latexmain.run.xml 
