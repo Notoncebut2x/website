@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Rory Nealon's personal website featuring maps of bike rides, bird sightings, and life experiences">
-    <meta name="keywords" content="Rory Nealon, maps, biking, birding, geography, data visualization">
+    <meta name="keywords" content="Rory Nealon, maps, biking, birding, geography, gis, data visualization">
     <meta name="author" content="Rory Nealon">
     <meta property="og:title" content="Rory Nealon">
     <meta property="og:description" content="Explore my life through maps of bike rides, bird sightings, and experiences">
@@ -133,6 +133,16 @@
             flex-direction: column;
             gap: 1.5rem;
             position: relative;
+            z-index: 1000;
+            margin-bottom: 2rem;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 1000;
         }
 
         .nav-link {
@@ -141,42 +151,55 @@
             font-size: clamp(1rem, 2vw, 1.25rem);
             font-weight: 400;
             opacity: 0.8;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, font-weight 0.3s ease;
             line-height: 1;
             position: relative;
-            z-index: 1;
+            z-index: 1000;
             margin-bottom: 0;
+            cursor: pointer !important;
+            display: block;
+            padding: 0.5rem 0;
+            pointer-events: auto;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            background-color: transparent;
         }
 
         .nav-link:hover {
             opacity: 1;
+            cursor: pointer !important;
+        }
+        
+        .nav-link.active {
+            font-weight: 600;
+            opacity: 1;
         }
 
         .content-section {
-            display: block;
+            display: none;
             color: #ffffff;
             font-size: clamp(0.875rem, 1.5vw, 1rem);
             line-height: 1.6;
             max-width: 100%;
-            padding-left: 0.5rem;
-            height: 0;
+            padding: 1rem 0.5rem;
             margin: 0;
-            overflow: hidden;
             opacity: 0;
             transform: translateY(-10px);
             transition: opacity 0.3s ease-out,
-                        transform 0.3s ease-out,
-                        height 0.3s ease-out;
+                        transform 0.3s ease-out;
             position: relative;
-            pointer-events: none;
             background-color: #000000;
+            pointer-events: auto;
+            z-index: 999;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .content-section.active {
+            display: block !important;
             opacity: 1;
-            height: auto;
-            margin-top: 0.5rem;
-            margin-bottom: 1.5rem;
             transform: translateY(0);
             pointer-events: auto;
         }
@@ -489,62 +512,74 @@
             <div class="col-md-3 sidebar">
                 <h1>Rory Nealon</h1>
                 <nav class="nav-links">
-                    <a href="#" class="nav-link" data-section="bio">Bio</a>
-                    <div id="bio" class="content-section">
-                        <div id="bio-content">
-                            <div class="bio-filter-container">
-                                <div class="bio-filter-buttons">
-                                    <button class="bio-filter-btn active" data-category="all">All</button>
-                                    <span class="bio-filter-separator">|</span>
-                                    <button class="bio-filter-btn" data-category="professional">Professional</button>
-                                    <span class="bio-filter-separator">|</span>
-                                    <button class="bio-filter-btn" data-category="personal">Personal</button>
-                                </div>
-                            </div>
-                            <p class="bio-details">Learn about where I have lived, worked and gone to school. Hover over each highlighted portion of the map to learn more.</p>
-                        </div>
-                    </div>
-                    <a href="#" class="nav-link" data-section="birds">Birds</a>
-                    <div id="birds" class="content-section">
-                        <div class="map-container">
-                            <div id="birds-content">
-                                <p class="bio-details">Hover over grid squares to see the number of species observed. If you want to see more updated info and checklists, check out my <a href="https://ebird.org/profile/NDk4NDUz/world" target="_blank">ebird profile</a>.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" class="nav-link" data-section="bike">Bikes</a>
-                    <div id="bike" class="content-section">
-                        <div class="map-container">
-                            <div id="bike-content">
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="bio">Bio</a>
+                        <div id="bio" class="content-section">
+                            <div id="bio-content">
                                 <div class="bio-filter-container">
                                     <div class="bio-filter-buttons">
-                                        <button class="bio-filter-btn" data-category="ride">Rides</button>
+                                        <button class="bio-filter-btn active" data-category="all">All</button>
                                         <span class="bio-filter-separator">|</span>
-                                        <button class="bio-filter-btn" data-category="elevation">Elevation</button>
+                                        <button class="bio-filter-btn" data-category="professional">Professional</button>
                                         <span class="bio-filter-separator">|</span>
-                                        <button class="bio-filter-btn" data-category="distance">Distance</button>
+                                        <button class="bio-filter-btn" data-category="personal">Personal</button>
                                     </div>
                                 </div>
-                                <p class="bio-details">I love to bike! See where I have biked on the map and see how many miles I have biked in each grid cell by clicking on the map. For more details check out my <a href="https://www.strava.com/athletes/4755914" target="_blank">Strava profile</a>.</p>
+                                <p class="bio-details">Learn about where I have lived, worked and gone to school. Hover over each highlighted portion of the map to learn more.</p>
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="nav-link" data-section="beers">Beers</a>
-                    <div id="beers" class="content-section">
-                        <div id="beers-content">
-                            <p class="bio-details"> More comming soon!!! I have been homebrewing since I was in high school, no seriously we brewed beer in chemistry class and had to get waivers from our parents. Since then I have only brewed one beer that tasted like cheese!</p>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="birds">Birds</a>
+                        <div id="birds" class="content-section">
+                            <div class="map-container">
+                                <div id="birds-content">
+                                    <p class="bio-details">Hover over grid squares to see the number of species observed. If you want to see more updated info and checklists, check out my <a href="https://ebird.org/profile/NDk4NDUz/world" target="_blank">ebird profile</a>.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <a href="#" class="nav-link" data-section="bearings">Bearings</a>
-                    <div id="bearings" class="content-section">
-                        <div id="bearings-content">
-                            <p class="bio-details">Having lived around the world I get my bearings with maps. Whether I'm biking, birding, or wondering where a style of beer I just drank came from originally. I decided to make a career out of understanding location and its impact on our natural and built environment, society and our lives.</p>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="bike">Bikes</a>
+                        <div id="bike" class="content-section">
+                            <div class="map-container">
+                                <div id="bike-content">
+                                    <div class="bio-filter-container">
+                                        <div class="bio-filter-buttons">
+                                            <button class="bio-filter-btn" data-category="ride">Rides</button>
+                                            <span class="bio-filter-separator">|</span>
+                                            <button class="bio-filter-btn" data-category="elevation">Elevation</button>
+                                            <span class="bio-filter-separator">|</span>
+                                            <button class="bio-filter-btn" data-category="distance">Distance</button>
+                                        </div>
+                                    </div>
+                                    <p class="bio-details">I love to bike! See where I have biked on the map and see how many miles I have biked in each grid cell by clicking on the map. For more details check out my <a href="https://www.strava.com/athletes/4755914" target="_blank">Strava profile</a>.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <a href="#" class="nav-link" data-section="buddies">Buddies</a>
-                    <div id="buddies" class="content-section">
-                        <div id="buddies-content">
-                            <p class="bio-details">Check out my dad's <a href="https://jamesdnealon.substack.com/" target="_blank">Substack</a> for his thoughts on geo-political events and growing up.</p>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="beers">Beers</a>
+                        <div id="beers" class="content-section">
+                            <div id="beers-content">
+                                <p class="bio-details"> More comming soon!!! I have been homebrewing since I was in high school, no seriously we brewed beer in chemistry class and had to get waivers from our parents. Since then I have only brewed one beer that tasted like cheese!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="bearings">Bearings</a>
+                        <div id="bearings" class="content-section">
+                            <div id="bearings-content">
+                                <p class="bio-details">Having lived around the world I get my bearings with maps. Whether I'm biking, birding, or wondering where a style of beer I just drank came from originally. I decided to make a career out of understanding location and its impact on our natural and built environment, society and our lives.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="buddies">Buddies</a>
+                        <div id="buddies" class="content-section">
+                            <div id="buddies-content">
+                                <p class="bio-details">Check out my dad's <a href="https://jamesdnealon.substack.com/" target="_blank">Substack</a> for his thoughts on geo-political events and growing up.</p>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -569,12 +604,19 @@
 
         // Show loading indicator
         function showLoading() {
-            document.getElementById('loading-overlay').classList.add('visible');
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.add('visible');
+            overlay.style.display = 'flex';
         }
 
         // Hide loading indicator
         function hideLoading() {
-            document.getElementById('loading-overlay').classList.remove('visible');
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.remove('visible');
+            // Add a small delay before hiding to ensure the transition completes
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
         }
 
         // Show error message
@@ -587,20 +629,20 @@
             setTimeout(() => {
                 errorElement.style.display = 'none';
             }, 5000);
+            
+            // Always hide loading overlay when showing an error
+            hideLoading();
         }
 
         // Check if all data is loaded
         function checkAllDataLoaded() {
             dataLoadCount++;
+            
             if (dataLoadCount === totalDataFiles) {
                 hideLoading();
                 
-                if (bioData) {
-                    const bioSection = document.getElementById('bio');
-                    if (bioSection && bioSection.classList.contains('active')) {
-                        handleNavClick.call(document.querySelector('.nav-link[data-section="bio"]'));
-                    }
-                }
+                // Don't activate any section by default
+                // The user will need to click a nav link to see content
             }
         }
 
@@ -683,23 +725,101 @@
                 .attr("class", "earth")
                 .attr("data-id", d => d.properties.fid)
                 .attr("d", path);
+                
+            // Ensure all sections are hidden by default
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
         }
 
-        // Handle navigation clicks
-        function handleNavClick(e) {
-            e.preventDefault();
-            const sectionId = this.getAttribute('data-section');
-            if (!sectionId) return;
-
-            document.querySelectorAll('.content-section').forEach(section => {
-                if (section.id !== sectionId) {
-                    section.classList.remove('active');
-                }
-            });
-
-            const section = document.getElementById(sectionId);
-            const isActive = section.classList.toggle('active');
+        // Initialize the first section as active
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to all navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
             
+            navLinks.forEach(link => {
+                // Add click handler
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    if (!sectionId) {
+                        return;
+                    }
+                    
+                    // Check if the clicked section is already active
+                    const section = document.getElementById(sectionId);
+                    const isAlreadyActive = section && section.classList.contains('active');
+                    
+                    // Remove active class from all nav links
+                    document.querySelectorAll('.nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    
+                    // Hide all sections first
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Reset map to default state
+                    svg.selectAll('.earth')
+                        .classed('bird-heat', false)
+                        .classed('bike-heat', false)
+                        .classed('bio-heat', false)
+                        .classed('highlighted', false)
+                        .classed('zero', false)
+                        .classed('low', false)
+                        .classed('medium', false)
+                        .classed('high', false)
+                        .classed('inactive', false)
+                        .classed('active', false);
+                    
+                    // Hide filter containers
+                    d3.select('#bio .bio-filter-container').style('display', 'none');
+                    d3.select('#bike .bio-filter-container').style('display', 'none');
+                    
+                    // Remove event listeners
+                    svg.selectAll('.earth')
+                        .on('mouseover', null)
+                        .on('mousemove', null)
+                        .on('mouseout', null);
+                    d3.selectAll('#bio .bio-filter-btn')
+                        .on('click', null);
+                    d3.selectAll('#bike .bio-filter-btn')
+                        .on('click', null);
+                    
+                    // If the section was already active, we're done (closing it)
+                    if (isAlreadyActive) {
+                        return;
+                    }
+                    
+                    // Add active class to clicked nav link
+                    this.classList.add('active');
+                    
+                    // Show the selected section
+                    if (section) {
+                        section.classList.add('active');
+                        
+                        // Call handleNavClick with the section ID
+                        handleNavClick(sectionId);
+                    }
+                });
+            });
+            
+            // Ensure no section is active by default
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+        });
+
+        // Handle navigation clicks
+        function handleNavClick(sectionId) {
+            if (!sectionId) {
+                return;
+            }
+
             // Reset all map classes first
             svg.selectAll('.earth')
                 .classed('bird-heat', false)
@@ -713,17 +833,17 @@
                 .classed('inactive', false)
                 .classed('active', false);
             
-            // Handle map highlighting
-            if (sectionId === 'bio' && bioData) {
+            // Handle map highlighting based on section
+            if (sectionId === 'bio') {
                 // Show the filter dropdown
                 d3.select('#bio .bio-filter-container').style('display', 'block');
                 
                 // Toggle bio heat map
                 svg.selectAll('.earth')
-                    .classed('bio-heat', isActive)
-                    .style('opacity', isActive ? 1 : 0.3);
+                    .classed('bio-heat', true)
+                    .style('opacity', 1);
                 
-                if (isActive) {
+                if (bioData) {
                     // Initialize map with "All" entries highlighted
                     svg.selectAll('.earth').each(function(d) {
                         if (!d || !d.properties) return;
@@ -812,20 +932,23 @@
                             }
                         });
                 } else {
-                    d3.select('#bio .bio-filter-container').style('display', 'none');
-                    svg.selectAll('.earth')
-                        .on('mouseover', null)
-                        .on('mousemove', null)
-                        .on('mouseout', null);
-                    d3.selectAll('#bio .bio-filter-btn')
-                        .on('click', null);
+                    showLoading();
+                    d3.json('./data/map_data/bio.json').then(data => {
+                        bioData = data;
+                        hideLoading();
+                        // Call handleNavClick again with the same section ID
+                        handleNavClick(sectionId);
+                    }).catch(error => {
+                        showError('Failed to load bio data. Please refresh the page.');
+                        hideLoading();
+                    });
                 }
-            } else if (sectionId === 'birds' && birdData) {
-                svg.selectAll('.earth')
-                    .classed('bird-heat', isActive)
-                    .classed('highlighted', false);
+            } else if (sectionId === 'birds') {
+                if (birdData) {
+                    svg.selectAll('.earth')
+                        .classed('bird-heat', true)
+                        .classed('highlighted', false);
 
-                if (isActive) {
                     // Show zero species first
                     svg.selectAll('.earth')
                         .each(function(d) {
@@ -908,13 +1031,24 @@
                                     .style('opacity', 0);
                             }
                         });
+                } else {
+                    showLoading();
+                    d3.json('./data/map_data/earth_birds.geojson').then(data => {
+                        birdData = data;
+                        hideLoading();
+                        // Call handleNavClick again with the same section ID
+                        handleNavClick(sectionId);
+                    }).catch(error => {
+                        showError('Failed to load bird data. Please refresh the page.');
+                        hideLoading();
+                    });
                 }
-            } else if (sectionId === 'bike' && bikeData) {
-                svg.selectAll('.earth')
-                    .classed('bike-heat', isActive)
-                    .classed('highlighted', false);
+            } else if (sectionId === 'bike') {
+                if (bikeData) {
+                    svg.selectAll('.earth')
+                        .classed('bike-heat', true)
+                        .classed('highlighted', false);
 
-                if (isActive) {
                     d3.select('#bike .bio-filter-container').style('display', 'block');
                     
                     svg.selectAll('.earth')
@@ -1049,25 +1183,47 @@
                             }
                         });
                 } else {
-                    d3.select('#bike .bio-filter-container').style('display', 'none');
-                    svg.selectAll('.earth')
-                        .on('mouseover', null)
-                        .on('mousemove', null)
-                        .on('mouseout', null);
-                    d3.selectAll('#bike .bio-filter-btn')
-                        .on('click', null);
+                    showLoading();
+                    d3.json('./data/map_data/earth_bikes.geojson').then(data => {
+                        bikeData = data;
+                        hideLoading();
+                        // Call handleNavClick again with the same section ID
+                        handleNavClick(sectionId);
+                    }).catch(error => {
+                        showError('Failed to load bike data. Please refresh the page.');
+                        hideLoading();
+                    });
                 }
+            } else {
+                // For other sections, just hide the filter containers
+                d3.select('#bio .bio-filter-container').style('display', 'none');
+                d3.select('#bike .bio-filter-container').style('display', 'none');
+                
+                // Remove event listeners
+                svg.selectAll('.earth')
+                    .on('mouseover', null)
+                    .on('mousemove', null)
+                    .on('mouseout', null);
+                d3.selectAll('#bio .bio-filter-btn')
+                    .on('click', null);
+                d3.selectAll('#bike .bio-filter-btn')
+                    .on('click', null);
             }
         }
 
         // Load data
         showLoading();
         
+        // Add a timeout to hide the loading overlay if data loading takes too long
+        const loadingTimeout = setTimeout(() => {
+            hideLoading();
+            showError('Data loading is taking longer than expected. Please refresh the page if the issue persists.');
+        }, 10000); // 10 second timeout
+        
         d3.json('./data/map_data/earth_bikes.geojson').then(data => {
             bikeData = data;
             checkAllDataLoaded();
         }).catch(error => {
-            console.error('Error loading bike data:', error);
             showError('Failed to load bike data. Please refresh the page.');
             checkAllDataLoaded();
         });
@@ -1076,7 +1232,6 @@
             birdData = data;
             checkAllDataLoaded();
         }).catch(error => {
-            console.error("Error loading bird data:", error);
             showError('Failed to load bird data. Please refresh the page.');
             checkAllDataLoaded();
         });
@@ -1085,7 +1240,6 @@
             bioData = data;
             checkAllDataLoaded();
         }).catch(error => {
-            console.error("Error loading bio data:", error);
             showError('Failed to load bio data. Please refresh the page.');
             checkAllDataLoaded();
         });
@@ -1094,14 +1248,13 @@
             earthData = data;
             initializeMap(data);
             checkAllDataLoaded();
+            // Clear the timeout since all data loaded successfully
+            clearTimeout(loadingTimeout);
         }).catch(error => {
-            console.error("Error loading earth data:", error);
             showError('Failed to load map data. Please refresh the page.');
             checkAllDataLoaded();
-        });
-
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', handleNavClick);
+            // Clear the timeout since we're handling the error
+            clearTimeout(loadingTimeout);
         });
     </script>
 </body>
