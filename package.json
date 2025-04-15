@@ -1,0 +1,12 @@
+{
+  "name": "rorynealon-website",
+  "version": "1.0.0",
+  "description": "Personal website of Rory Nealon",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+} 

@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .nav-link {
+    @apply no-underline border-0 outline-none cursor-pointer;
+  }
+  .nav-link:hover {
+    @apply no-underline border-0 outline-none bg-transparent text-gray-300;
+  }
+  .nav-link:focus {
+    @apply no-underline border-0 outline-none bg-transparent;
+  }
+  p a {
+    @apply text-neon-green no-underline;
+  }
+  p a:hover {
+    @apply text-neon-green no-underline;
+  }
+} 

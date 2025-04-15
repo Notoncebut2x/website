@@ -48,15 +48,15 @@ const pointsGroup = g.append("g")
     .attr("class", "points-group");
 
 // Load land data first to create the mask
-d3.json("map_data/earth.geojson").then(function(landData) {
+d3.json("data/map_data/earth.geojson").then(function(landData) {
     console.log("Loaded land data:", landData);
 
     // Now load the centroids data
-    d3.json("map_data/earth_centroids.geojson").then(function(data) {
+    d3.json("data/map_data/earth_centroids.geojson").then(function(data) {
         console.log("Loaded GeoJSON data:", data);
         
         // Load bird data
-        d3.json("map_data/bird_centroids.geojson").then(function(birdData) {
+        d3.json("data/map_data/bird_centroids.geojson").then(function(birdData) {
             console.log("Loaded bird data:", birdData);
             
             // Create a map of fid to bird data
@@ -66,7 +66,7 @@ d3.json("map_data/earth.geojson").then(function(landData) {
             });
             
             // Load bio data and sort by start date
-            d3.json("map_data/bio.json").then(function(bioData) {
+            d3.json("data/map_data/bio.json").then(function(bioData) {
                 console.log("Loaded bio data:", bioData);
                 
                 // Create a map of fid to bio entries
@@ -482,171 +482,169 @@ d3.json("map_data/earth.geojson").then(function(landData) {
         .html(`<p class='text-red-400 text-center'>Error loading map data: ${error.message}</p>`);
 });
 
+// Define bike functions globally
+function showBikePointsByDistance() {
+    console.log("Showing bike points by distance");
+    const points = pointsGroup.selectAll(".point");
+    const bioCircles = pointsGroup.selectAll(".bio-circle");
+    
+    // Hide all bio circles
+    bioCircles.style("display", "none");
+    
+    // Reset all points to default color
+    points.attr("fill", "#2d3748");
+    
+    // Group points by distance
+    const lowDistancePoints = [];
+    const mediumDistancePoints = [];
+    const highDistancePoints = [];
+    
+    points.each(function(d) {
+        const fid = d.properties.fid.toString();
+        const bikeFeature = bikeMap ? bikeMap.get(fid) : null;
+        if (bikeFeature) {
+            const distance = bikeFeature.properties.distance;
+            if (distance <= 50) {
+                lowDistancePoints.push(this);
+            } else if (distance <= 199) {
+                mediumDistancePoints.push(this);
+            } else {
+                highDistancePoints.push(this);
+            }
+        }
+    });
+    
+    // Animate points in sequence
+    function animatePoints(points, color, delay) {
+        points.forEach((point, index) => {
+            setTimeout(() => {
+                d3.select(point)
+                    .attr("fill", color)
+                    .attr("r", 2);
+            }, delay + (index * 100));
+        });
+    }
+    
+    // Animate points with different colors
+    animatePoints(lowDistancePoints, "#FFD700", 0);      // Yellow for low distance
+    animatePoints(mediumDistancePoints, "#FFA500", lowDistancePoints.length * 100 + 500);  // Orange for medium
+    animatePoints(highDistancePoints, "#FF0000", (lowDistancePoints.length + mediumDistancePoints.length) * 100 + 1000);  // Red for high
+
+    // Update legend
+    updateBikeLegend("distance");
+}
+
+function showBikePointsByElevation() {
+    const points = pointsGroup.selectAll(".point");
+    const bioCircles = pointsGroup.selectAll(".bio-circle");
+    
+    // Hide all bio circles
+    bioCircles.style("display", "none");
+    
+    // Reset all points to default color
+    points.attr("fill", "#2d3748");
+    
+    // Group points by elevation gain
+    const lowElevationPoints = [];
+    const mediumElevationPoints = [];
+    const highElevationPoints = [];
+    
+    points.each(function(d) {
+        const fid = d.properties.fid.toString();
+        const bikeFeature = bikeMap ? bikeMap.get(fid) : null;
+        if (bikeFeature) {
+            const elevation = bikeFeature.properties.elevation_gain;
+            if (elevation <= 100) {
+                lowElevationPoints.push(this);
+            } else if (elevation <= 1000) {
+                mediumElevationPoints.push(this);
+            } else {
+                highElevationPoints.push(this);
+            }
+        }
+    });
+    
+    // Animate points in sequence
+    function animatePoints(points, color, delay) {
+        points.forEach((point, index) => {
+            setTimeout(() => {
+                d3.select(point)
+                    .attr("fill", color)
+                    .attr("r", 2);
+            }, delay + (index * 100));
+        });
+    }
+    
+    // Animate points with different colors
+    animatePoints(lowElevationPoints, "#FFD700", 0);     // Yellow for low elevation
+    animatePoints(mediumElevationPoints, "#FFA500", lowElevationPoints.length * 100 + 500);  // Orange for medium
+    animatePoints(highElevationPoints, "#FF0000", (lowElevationPoints.length + mediumElevationPoints.length) * 100 + 1000);  // Red for high
+
+    // Update legend
+    updateBikeLegend("elevation");
+}
+
+function updateBikeLegend(category) {
+    // Remove existing legend
+    svg.selectAll(".legend").remove();
+
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${width - 200}, ${height - 120})`);
+
+    // Add legend title
+    legend.append("text")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("class", "text-sm font-bold fill-white")
+        .text(category === "distance" ? "Distance (miles)" : "Elevation Gain (ft)");
+
+    // Define legend items based on category
+    const legendItems = category === "distance" ? [
+        { color: "#FFD700", text: "0.1 - 50 miles" },
+        { color: "#FFA500", text: "50 - 199 miles" },
+        { color: "#FF0000", text: "200+ miles" }
+    ] : [
+        { color: "#FFD700", text: "1 - 100 ft" },
+        { color: "#FFA500", text: "100 - 1000 ft" },
+        { color: "#FF0000", text: "1000+ ft" }
+    ];
+
+    const itemSpacing = 25;
+
+    legendItems.forEach((item, i) => {
+        const itemGroup = legend.append("g")
+            .attr("transform", `translate(0, ${(i + 1) * itemSpacing})`);
+
+        itemGroup.append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 5)
+            .attr("fill", item.color);
+
+        itemGroup.append("text")
+            .attr("x", 15)
+            .attr("y", 4)
+            .attr("class", "text-sm fill-white")
+            .text(item.text);
+    });
+}
+
+// Initialize bikeMap as null
+let bikeMap = null;
+
 // Load bike data
-d3.json("map_data/bike_centroids.geojson").then(function(bikeData) {
+d3.json("data/map_data/bike_centroids.geojson").then(function(bikeData) {
     console.log("Loaded bike data:", bikeData);
     
     // Create a map of fid to bike data
-    const bikeMap = new Map();
+    bikeMap = new Map();
     bikeData.features.forEach(feature => {
         // Only add features that have actual bike data
         if (feature.properties.distance !== null && feature.properties.elevation_gain !== null) {
-            console.log("Bike feature:", feature);
             bikeMap.set(feature.properties.fid.toString(), feature);
         }
     });
-
-    // Function to show bike points by distance
-    function showBikePointsByDistance() {
-        console.log("Showing bike points by distance");
-        const points = pointsGroup.selectAll(".point");
-        const bioCircles = pointsGroup.selectAll(".bio-circle");
-        
-        // Hide all bio circles
-        bioCircles.style("display", "none");
-        
-        // Reset all points to default color
-        points.attr("fill", "#2d3748");
-        
-        // Group points by distance
-        const lowDistancePoints = [];
-        const mediumDistancePoints = [];
-        const highDistancePoints = [];
-        
-        points.each(function(d) {
-            const fid = d.properties.fid.toString();
-            const bikeFeature = bikeMap.get(fid);
-            console.log("Checking point:", fid, bikeFeature);
-            if (bikeFeature) {
-                const distance = bikeFeature.properties.distance;
-                console.log("Bike distance:", distance);
-                if (distance <= 50) {
-                    lowDistancePoints.push(this);
-                } else if (distance <= 199) {
-                    mediumDistancePoints.push(this);
-                } else {
-                    highDistancePoints.push(this);
-                }
-            }
-        });
-        
-        // Animate points in sequence
-        function animatePoints(points, color, delay) {
-            points.forEach((point, index) => {
-                setTimeout(() => {
-                    d3.select(point)
-                        .attr("fill", color)
-                        .attr("r", 2);
-                }, delay + (index * 100));
-            });
-        }
-        
-        // Animate points with different colors
-        animatePoints(lowDistancePoints, "#FFD700", 0);      // Yellow for low distance
-        animatePoints(mediumDistancePoints, "#FFA500", lowDistancePoints.length * 100 + 500);  // Orange for medium
-        animatePoints(highDistancePoints, "#FF0000", (lowDistancePoints.length + mediumDistancePoints.length) * 100 + 1000);  // Red for high
-
-        // Update legend
-        updateBikeLegend("distance");
-    }
-
-    // Function to show bike points by elevation
-    function showBikePointsByElevation() {
-        const points = pointsGroup.selectAll(".point");
-        const bioCircles = pointsGroup.selectAll(".bio-circle");
-        
-        // Hide all bio circles
-        bioCircles.style("display", "none");
-        
-        // Reset all points to default color
-        points.attr("fill", "#2d3748");
-        
-        // Group points by elevation gain
-        const lowElevationPoints = [];
-        const mediumElevationPoints = [];
-        const highElevationPoints = [];
-        
-        points.each(function(d) {
-            const fid = d.properties.fid.toString();
-            const bikeFeature = bikeMap.get(fid);
-            if (bikeFeature) {
-                const elevation = bikeFeature.properties.elevation_gain;
-                if (elevation <= 100) {
-                    lowElevationPoints.push(this);
-                } else if (elevation <= 1000) {
-                    mediumElevationPoints.push(this);
-                } else {
-                    highElevationPoints.push(this);
-                }
-            }
-        });
-        
-        // Animate points in sequence
-        function animatePoints(points, color, delay) {
-            points.forEach((point, index) => {
-                setTimeout(() => {
-                    d3.select(point)
-                        .attr("fill", color)
-                        .attr("r", 2);
-                }, delay + (index * 100));
-            });
-        }
-        
-        // Animate points with different colors
-        animatePoints(lowElevationPoints, "#FFD700", 0);     // Yellow for low elevation
-        animatePoints(mediumElevationPoints, "#FFA500", lowElevationPoints.length * 100 + 500);  // Orange for medium
-        animatePoints(highElevationPoints, "#FF0000", (lowElevationPoints.length + mediumElevationPoints.length) * 100 + 1000);  // Red for high
-
-        // Update legend
-        updateBikeLegend("elevation");
-    }
-
-    // Function to update the legend based on category
-    function updateBikeLegend(category) {
-        // Remove existing legend
-        svg.selectAll(".legend").remove();
-
-        const legend = svg.append("g")
-            .attr("class", "legend")
-            .attr("transform", `translate(${width - 200}, ${height - 120})`);
-
-        // Add legend title
-        legend.append("text")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("class", "text-sm font-bold fill-white")
-            .text(category === "distance" ? "Distance (miles)" : "Elevation Gain (ft)");
-
-        // Define legend items based on category
-        const legendItems = category === "distance" ? [
-            { color: "#FFD700", text: "0.1 - 50 miles" },
-            { color: "#FFA500", text: "50 - 199 miles" },
-            { color: "#FF0000", text: "200+ miles" }
-        ] : [
-            { color: "#FFD700", text: "1 - 100 ft" },
-            { color: "#FFA500", text: "100 - 1000 ft" },
-            { color: "#FF0000", text: "1000+ ft" }
-        ];
-
-        const itemSpacing = 25;
-
-        legendItems.forEach((item, i) => {
-            const itemGroup = legend.append("g")
-                .attr("transform", `translate(0, ${(i + 1) * itemSpacing})`);
-
-            itemGroup.append("circle")
-                .attr("cx", 0)
-                .attr("cy", 0)
-                .attr("r", 5)
-                .attr("fill", item.color);
-
-            itemGroup.append("text")
-                .attr("x", 15)
-                .attr("y", 4)
-                .attr("class", "text-sm fill-white")
-                .text(item.text);
-        });
-    }
 
     // Add click handlers for bike filter buttons
     d3.selectAll('.bike-filter').on('click', function() {
@@ -662,32 +660,6 @@ d3.json("map_data/bike_centroids.geojson").then(function(bikeData) {
             showBikePointsByElevation();
         }
     });
-
-    // Add click handler for bike nav-link
-    d3.selectAll('.nav-link').on('click', function() {
-        const contentId = this.textContent.toLowerCase() + '-content';
-        const contentDiv = document.getElementById(contentId);
-        
-        // Hide all content sections
-        document.querySelectorAll('[id$="-content"]').forEach(div => {
-            div.classList.add('hidden');
-        });
-        
-        // Show the clicked section's content
-        if (contentDiv) {
-            contentDiv.classList.remove('hidden');
-        }
-        
-        // Update the map based on the section
-        if (this.textContent === 'Bio') {
-            showPointsUpToDate('all');
-        } else if (this.textContent === 'Birds') {
-            showBirdPoints();
-        } else if (this.textContent === 'Bikes') {
-            showBikePointsByDistance(); // Default to showing distance view
-        } else {
-            // For other sections, reset the map
-            resetMap();
-        }
-    });
+}).catch(error => {
+    console.error("Error loading bike data:", error);
 }); 
