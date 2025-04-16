@@ -45,7 +45,7 @@
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-[20%] h-[95vh] bg-gray-800 mt-8 ml-8 mb-16 px-6 pt-6 flex flex-col">
-            <div class="mb-12">
+            <div class="mb-8">
                 <h1 class="text-5xl font-bold text-white mb-2 text-left">Rory Nealon</h1>
                 <p class="text-gray-400 text-left">Mapgician/Maptician</p>
             </div>
@@ -53,52 +53,53 @@
                 <div>
                     <a href="#bio" class="nav-link text-gray-100 text-4xl text-left hover:no-underline hover:border-none">Bio</a>
                     <div class="hidden" id="bio-content">
-                        <div class="flex space-x-2 pl-4">
-                            <button class="bio-filter px-2 py-2 text-white rounded text-left" data-category="professional">Professional</button>
-                            <button class="bio-filter px-2 py-2 text-white rounded text-left" data-category="personal">Personal</button>
+                        <div class="flex space-x-2">
+                            <button class="bio-filter px-1 py-1 text-white rounded text-left" data-category="professional">Professional</button>
+                            <button class="bio-filter px-1 py-1 text-white rounded text-left" data-category="personal">Personal</button>
+                            <button class="bio-filter px-1 py-1 text-white rounded text-left" data-category="all">All</button>
                         </div>
-                        <p class="text-gray-300 text-left pl-6">Learn about where I have lived, worked and gone to school. Hover over each highlighted portion of the map to learn more.</p>
+                        <p class="text-gray-300 text-left pl-1">Learn about where I have lived, worked and gone to school. Hover over each highlighted portion of the map to learn more.</p>
                     </div>
                 </div>
                 <div>
                     <a href="#birds" class="nav-link text-gray-100 text-4xl text-left hover:no-underline hover:border-none">Birds</a>
                     <div class="hidden" id="birds-content">
-                        <p class="text-gray-300 text-left pl-6 mt-8">Hover over grid squares to see the number of species observed. If you want to see more updated info and checklists, check out my <a href="https://ebird.org/profile/NDk4NDUz/world" target="_blank">ebird profile/</a></p>
+                        <p class="text-gray-300 text-left pl-1 mt-4">Hover the dot grid to see the number of species observed. If you want to see more updated info and checklists, check out my <a href="https://ebird.org/profile/NDk4NDUz/world" target="_blank">ebird profile.</a></p>
                     </div>
                 </div>
                 <div>
                     <a href="#bikes" class="nav-link text-gray-100 text-4xl text-left hover:no-underline hover:border-none">Bikes</a>
                     <div class="hidden" id="bikes-content">
-                        <div class="flex space-x-2 pl-4">
-                            <button class="bike-filter px-2 py-2 text-white rounded text-left" data-category="distance">Distance</button>
-                            <button class="bike-filter px-2 py-2 text-white rounded text-left" data-category="elevation">Elevation</button>
+                        <div class="flex space-x-2">
+                            <button class="bike-filter px-1 py-1 text-white rounded text-left" data-category="distance">Distance</button>
+                            <button class="bike-filter px-1 py-1 text-white rounded text-left" data-category="elevation">Elevation</button>
                         </div>
-                        <p class="text-gray-300 text-left pl-6">View my bike rides by distance or elevation gain. Hover over points to see details.</p>
+                        <p class="text-gray-300 text-left pl-1">View my bike rides by distance or elevation gain. Hover over points to see details.</p>
                     </div>
                 </div>
                 <div>
                     <a href="#beers" class="nav-link text-gray-100 text-4xl text-left hover:no-underline hover:border-none">Beers</a>
                     <div class="hidden" id="beers-content">
-                        <p class="text-gray-300 text-left pl-6 mt-8">More comming soon!!! I have been homebrewing since I was in high school, no seriously we brewed beer in chemistry class and had to get waivers from our parents. Since then I have only brewed one beer that tasted like cheese!</p>
+                        <p class="text-gray-300 text-left pl-1 mt-4">More comming soon!!! I have been homebrewing since I was in high school, no seriously we brewed beer in chemistry class and had to get waivers from our parents. Since then I have only brewed one beer that tasted like cheese!</p>
                     </div>
                 </div>
                 <div>
                     <a href="#bearings" class="nav-link text-gray-100 text-4xl text-left hover:no-underline hover:border-none">Bearings</a>
                     <div class="hidden" id="bearings-content">
-                        <p class="text-gray-300 text-left pl-6 mt-8">Navigation and orientation tools for outdoor adventures.</p>
+                        <p class="text-gray-300 text-left pl-1 mt-4">Navigation and orientation tools for outdoor adventures.</p>
                     </div>
                 </div>
                 <div>
                     <a href="#buddies" class="nav-link text-gray-100 text-4xl text-left hover:no-underline hover:border-none">Buddies</a>
                     <div class="hidden" id="buddies-content">
-                        <p class="text-gray-300 text-left pl-6 mt-8">Friends and collaborators in the GIS and data science community.</p>
+                        <p class="text-gray-300 text-left pl-1 mt-4">Friends and collaborators in the GIS and data science community.</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="ml-8 pb-8 px-8 flex-1">
+        <div class="ml-8 mt-8 pb-8 px-8 flex-1">
             <div id="content" class="max-w-7xl mx-auto">
                 <div id="bio" class="section mb-8">
                     <div id="map-container" class="w-full h-[95vh] bg-black rounded-lg shadow-lg mb-4">

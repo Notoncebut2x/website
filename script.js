@@ -100,6 +100,20 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                 });
                 allBioEntries.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
+                // Function to get the active category
+                function getActiveCategory() {
+                    const activeButton = document.querySelector('.bio-filter.font-bold');
+                    return activeButton ? activeButton.getAttribute('data-category') : null;
+                }
+
+                // Function to filter entries by category
+                function filterEntriesByCategory(entries) {
+                    const activeCategory = getActiveCategory();
+                    return activeCategory === 'all' ? entries : 
+                        activeCategory ? entries.filter(entry => entry.category === activeCategory) : 
+                        entries;
+                }
+
                 // Function to show bird points
                 function showBirdPoints() {
                     const points = pointsGroup.selectAll(".point");
@@ -208,44 +222,31 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                     // Hide all bio circles
                     bioCircles.style("display", "none");
                     
-                    // If targetDate is 'all', show all points
-                    if (targetDate === 'all') {
-                        // Filter entries based on category if specified
-                        const filteredEntries = category ? 
-                            allBioEntries.filter(entry => entry.category === category) :
-                            allBioEntries;
-
-                        // Animate points sequentially
-                        filteredEntries.forEach((entry, index) => {
-                            setTimeout(() => {
-                                const fid = entry.fid.toString();
-                                points.filter(d => d.properties.fid.toString() === fid)
-                                    .attr("fill", "#BC13FE");
-                                
-                                bioCircles.filter(d => d.properties.fid.toString() === fid)
-                                    .style("display", null);
-                            }, index * 500); // 500ms delay between each point
-                        });
-                    } else {
-                        // Filter entries based on date and category
-                        const filteredEntries = allBioEntries.filter(entry => {
-                            if (new Date(entry.startDate) > new Date(targetDate)) return false;
-                            if (category && entry.category !== category) return false;
-                            return true;
-                        });
-
-                        // Animate points sequentially
-                        filteredEntries.forEach((entry, index) => {
-                            setTimeout(() => {
-                                const fid = entry.fid.toString();
-                                points.filter(d => d.properties.fid.toString() === fid)
-                                    .attr("fill", "#BC13FE");
-                                
-                                bioCircles.filter(d => d.properties.fid.toString() === fid)
-                                    .style("display", null);
-                            }, index * 500); // 500ms delay between each point
-                        });
-                    }
+                    // Get the active category if not provided
+                    const activeCategory = category || getActiveCategory();
+                    
+                    // Filter entries based on category
+                    const filteredEntries = activeCategory ? 
+                        allBioEntries.filter(entry => entry.category === activeCategory) :
+                        allBioEntries;
+                    
+                    // Create a map of FIDs for the selected category
+                    const categoryFids = new Set(filteredEntries.map(entry => entry.fid.toString()));
+                    
+                    // Update points and bio circles for the selected category
+                    points.each(function(d) {
+                        const fid = d.properties.fid.toString();
+                        if (categoryFids.has(fid)) {
+                            d3.select(this).attr("fill", "#BC13FE");
+                        }
+                    });
+                    
+                    bioCircles.each(function(d) {
+                        const fid = d.properties.fid.toString();
+                        if (categoryFids.has(fid)) {
+                            d3.select(this).style("display", null);
+                        }
+                    });
                 }
 
                 // Add click handler for all nav-links
@@ -283,7 +284,35 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                     d3.selectAll('.bio-filter').classed('font-bold', false);
                     // Add font-bold to clicked button
                     d3.select(this).classed('font-bold', true);
-                    showPointsUpToDate('all', category);
+                    
+                    // Reset all points to default color and hide all bio circles
+                    const allPoints = pointsGroup.selectAll(".point");
+                    const allBioCircles = pointsGroup.selectAll(".bio-circle");
+                    allPoints.attr("fill", "#2d3748");
+                    allBioCircles.style("display", "none");
+                    
+                    // Get all bio entries for the selected category
+                    const filteredEntries = category === 'all' ? 
+                        allBioEntries : 
+                        allBioEntries.filter(entry => entry.category === category);
+                    
+                    // Create a map of FIDs for the selected category
+                    const categoryFids = new Set(filteredEntries.map(entry => entry.fid.toString()));
+                    
+                    // Update points and bio circles for the selected category
+                    allPoints.each(function(d) {
+                        const fid = d.properties.fid.toString();
+                        if (categoryFids.has(fid)) {
+                            d3.select(this).attr("fill", "#BC13FE");
+                        }
+                    });
+                    
+                    allBioCircles.each(function(d) {
+                        const fid = d.properties.fid.toString();
+                        if (categoryFids.has(fid)) {
+                            d3.select(this).style("display", null);
+                        }
+                    });
                 });
 
                 // Create the points
@@ -316,26 +345,33 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                         
                         let tooltipContent = "";
                         
-                        if (birdFeature && birdFeature.properties.has_birds === 1) {
-                            tooltipContent += `
-                                <div class="mb-2">
-                                    <div class="font-bold">Bird Location</div>
-                                    <div class="text-sm">Species Count: ${birdFeature.properties.species_count}</div>
-                                    ${birdFeature.properties.species_list ? `<div class="text-sm">Species: ${birdFeature.properties.species_list}</div>` : ''}
-                                </div>
-                            `;
-                        }
-                        
-                        if (entries.length > 0) {
-                            entries.forEach(entry => {
+                        // Only show bird data if we're in the birds section
+                        if (document.getElementById('birds-content') && !document.getElementById('birds-content').classList.contains('hidden')) {
+                            if (birdFeature && birdFeature.properties.has_birds === 1) {
                                 tooltipContent += `
                                     <div class="mb-2">
-                                        <div class="font-bold">${entry.title}</div>
-                                        <div class="text-sm">${entry.startDate} - ${entry.endDate}</div>
-                                        <div class="text-sm">${entry.details}</div>
+                                        <div class="font-bold">Bird Location</div>
+                                        <div class="text-sm">Species Count: ${birdFeature.properties.species_count}</div>
+                                        ${birdFeature.properties.species_list ? `<div class="text-sm">Species: ${birdFeature.properties.species_list}</div>` : ''}
                                     </div>
                                 `;
-                            });
+                            }
+                        }
+                        
+                        // Only show bio data if we're in the bio section
+                        if (document.getElementById('bio-content') && !document.getElementById('bio-content').classList.contains('hidden')) {
+                            if (entries.length > 0) {
+                                const filteredEntries = filterEntriesByCategory(entries);
+                                filteredEntries.forEach(entry => {
+                                    tooltipContent += `
+                                        <div class="mb-2">
+                                            <div class="font-bold">${entry.title}</div>
+                                            <div class="text-sm">${entry.startDate} - ${entry.endDate}</div>
+                                            <div class="text-sm">${entry.details}</div>
+                                        </div>
+                                    `;
+                                });
+                            }
                         }
                         
                         if (tooltipContent) {
@@ -385,26 +421,20 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                         
                         let tooltipContent = "";
                         
-                        if (birdFeature && birdFeature.properties.has_birds === 1) {
-                            tooltipContent += `
-                                <div class="mb-2">
-                                    <div class="font-bold">Bird Location</div>
-                                    <div class="text-sm">Species Count: ${birdFeature.properties.species_count}</div>
-                                    ${birdFeature.properties.species_list ? `<div class="text-sm">Species: ${birdFeature.properties.species_list}</div>` : ''}
-                                </div>
-                            `;
-                        }
-                        
-                        if (entries.length > 0) {
-                            entries.forEach(entry => {
-                                tooltipContent += `
-                                    <div class="mb-2">
-                                        <div class="font-bold">${entry.title}</div>
-                                        <div class="text-sm">${entry.startDate} - ${entry.endDate}</div>
-                                        <div class="text-sm">${entry.details}</div>
-                                    </div>
-                                `;
-                            });
+                        // Only show bio data if we're in the bio section
+                        if (document.getElementById('bio-content') && !document.getElementById('bio-content').classList.contains('hidden')) {
+                            if (entries.length > 0) {
+                                const filteredEntries = filterEntriesByCategory(entries);
+                                filteredEntries.forEach(entry => {
+                                    tooltipContent += `
+                                        <div class="mb-2">
+                                            <div class="font-bold">${entry.title}</div>
+                                            <div class="text-sm">${entry.startDate} - ${entry.endDate}</div>
+                                            <div class="text-sm">${entry.details}</div>
+                                        </div>
+                                    `;
+                                });
+                            }
                         }
                         
                         if (tooltipContent) {
@@ -462,7 +492,15 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                 });
 
                 // Initialize with all points hidden
-                showPointsUpToDate("1900");
+                const initialPoints = pointsGroup.selectAll(".point");
+                const initialBioCircles = pointsGroup.selectAll(".bio-circle");
+                initialPoints.attr("fill", "#2d3748");
+                initialBioCircles.style("display", "none");
+
+                // Set default category to professional
+                const defaultCategory = "professional";
+                d3.select(`.bio-filter[data-category="${defaultCategory}"]`).classed('font-bold', true);
+                showPointsUpToDate('all', defaultCategory);
 
                 // Add zoom behavior
                 const zoom = d3.zoom()
