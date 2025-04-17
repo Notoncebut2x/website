@@ -226,27 +226,51 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                     const activeCategory = category || getActiveCategory();
                     
                     // Filter entries based on category
-                    const filteredEntries = activeCategory ? 
-                        allBioEntries.filter(entry => entry.category === activeCategory) :
-                        allBioEntries;
+                    const filteredEntries = activeCategory === 'all' ? 
+                        allBioEntries : 
+                        allBioEntries.filter(entry => entry.category === activeCategory);
                     
-                    // Create a map of FIDs for the selected category
-                    const categoryFids = new Set(filteredEntries.map(entry => entry.fid.toString()));
-                    
-                    // Update points and bio circles for the selected category
-                    points.each(function(d) {
-                        const fid = d.properties.fid.toString();
-                        if (categoryFids.has(fid)) {
-                            d3.select(this).attr("fill", "#BC13FE");
-                        }
+                    // Sort entries by start date
+                    const sortedEntries = [...filteredEntries].sort((a, b) => {
+                        return new Date(a.startDate) - new Date(b.startDate);
                     });
                     
-                    bioCircles.each(function(d) {
-                        const fid = d.properties.fid.toString();
-                        if (categoryFids.has(fid)) {
-                            d3.select(this).style("display", null);
-                        }
+                    // Create a map of FIDs to their chronological order
+                    const fidOrder = new Map();
+                    sortedEntries.forEach((entry, index) => {
+                        fidOrder.set(entry.fid.toString(), index);
                     });
+                    
+                    // Get all points that have bio data for the current category
+                    const pointsWithBio = points.nodes().filter(point => {
+                        const fid = point.__data__.properties.fid.toString();
+                        return fidOrder.has(fid);
+                    });
+                    
+                    // Sort points by their chronological order
+                    pointsWithBio.sort((a, b) => {
+                        const fidA = a.__data__.properties.fid.toString();
+                        const fidB = b.__data__.properties.fid.toString();
+                        return fidOrder.get(fidA) - fidOrder.get(fidB);
+                    });
+                    
+                    // Function to animate points in sequence
+                    function animatePoints(points, delay) {
+                        points.forEach((point, index) => {
+                            setTimeout(() => {
+                                const fid = point.__data__.properties.fid.toString();
+                                d3.select(point)
+                                    .attr("fill", "#BC13FE");
+                                
+                                // Show corresponding bio circle
+                                const bioCircle = bioCircles.filter(d => d.properties.fid.toString() === fid);
+                                bioCircle.style("display", null);
+                            }, delay + (index * 200));
+                        });
+                    }
+                    
+                    // Animate points in chronological order
+                    animatePoints(pointsWithBio, 0);
                 }
 
                 // Add click handler for all nav-links
@@ -337,11 +361,9 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                         const entries = bioMap.get(fid) || [];
                         const birdFeature = birdMap.get(fid);
                         
-                        // Make point bigger if it has birds or bio data
-                        if ((birdFeature && birdFeature.properties.has_birds === 1) || entries.length > 0) {
-                            d3.select(this)
-                                .attr("r", 4); // 2x bigger
-                        }
+                        // Make point bigger on hover
+                        d3.select(this)
+                            .attr("r", 4); // 2x bigger
                         
                         let tooltipContent = "";
                         
@@ -413,7 +435,6 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                     .on("mouseover", function(event, d) {
                         const fid = d.properties.fid.toString();
                         const entries = bioMap.get(fid) || [];
-                        const birdFeature = birdMap.get(fid);
                         
                         // Make bio circle bigger on hover
                         d3.select(this)
@@ -497,8 +518,8 @@ d3.json("data/map_data/earth.geojson").then(function(landData) {
                 initialPoints.attr("fill", "#2d3748");
                 initialBioCircles.style("display", "none");
 
-                // Set default category to professional
-                const defaultCategory = "professional";
+                // Set default category to all
+                const defaultCategory = "all";
                 d3.select(`.bio-filter[data-category="${defaultCategory}"]`).classed('font-bold', true);
                 showPointsUpToDate('all', defaultCategory);
 
@@ -558,7 +579,23 @@ function showBikePointsByDistance() {
             setTimeout(() => {
                 d3.select(point)
                     .attr("fill", color)
-                    .attr("r", 2);
+                    .attr("r", 2)
+                    .on("mouseover", function(event, d) {
+                        const fid = d.properties.fid.toString();
+                        const bikeFeature = bikeMap.get(fid);
+                        if (bikeFeature) {
+                            d3.select(this).attr("r", 4); // Make point bigger on hover
+                            tooltip
+                                .html(`Distance: ${bikeFeature.properties.distance.toFixed(1)} miles`)
+                                .style("left", (event.pageX + 10) + "px")
+                                .style("top", (event.pageY + 10) + "px")
+                                .style("opacity", 1);
+                        }
+                    })
+                    .on("mouseout", function() {
+                        d3.select(this).attr("r", 2); // Reset point size
+                        tooltip.style("opacity", 0);
+                    });
             }, delay + (index * 100));
         });
     }
@@ -608,7 +645,23 @@ function showBikePointsByElevation() {
             setTimeout(() => {
                 d3.select(point)
                     .attr("fill", color)
-                    .attr("r", 2);
+                    .attr("r", 2)
+                    .on("mouseover", function(event, d) {
+                        const fid = d.properties.fid.toString();
+                        const bikeFeature = bikeMap.get(fid);
+                        if (bikeFeature) {
+                            d3.select(this).attr("r", 4); // Make point bigger on hover
+                            tooltip
+                                .html(`Elevation Gain: ${bikeFeature.properties.elevation_gain.toFixed(0)} feet`)
+                                .style("left", (event.pageX + 10) + "px")
+                                .style("top", (event.pageY + 10) + "px")
+                                .style("opacity", 1);
+                        }
+                    })
+                    .on("mouseout", function() {
+                        d3.select(this).attr("r", 2); // Reset point size
+                        tooltip.style("opacity", 0);
+                    });
             }, delay + (index * 100));
         });
     }
